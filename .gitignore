@@ -29,4 +29,4 @@ build/Release
 node_modules
 
 .idea
-core/config/local.env.js
+config/local.env.js

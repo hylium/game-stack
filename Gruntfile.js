@@ -3,7 +3,7 @@
 module.exports = function(grunt) {
   var localConfig;
   try {
-    localConfig = require('./core/config/local.env');
+    localConfig = require('./config/local.env');
   } catch(e) {
     localConfig = {};
   }
@@ -24,10 +24,12 @@ module.exports = function(grunt) {
 
     jshint: {
       options: {
-        jshintrc: './.jshintrc'
+        jshintrc: './.jshintrc',
+        reporter: require('jshint-stylish')
       },
       all: [
-        '<%= gameStack.path%>/**/*.js'
+        './**/*.js',
+        '!./node_modules/**/*'
       ]
     },
 
