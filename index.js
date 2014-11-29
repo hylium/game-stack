@@ -1,7 +1,7 @@
 'use strict';
 
 var Hyperion = require('game-stack-hyperion'), path = require('path'), _ = require('lodash'),
-  util = require('util'), Hapi = require('hapi'), Q = require('q');
+  util = require('util'), Hapi = require('hapi'), Q = require('q'), async = require('async');
 
 /**
  * Exit application after displaying an error message
@@ -15,25 +15,12 @@ function die() {
  * Instantiate a new GameStack
  * @constructor
  */
-function GameStack(manifest, options) {
-  // Default options
-  this.config = _.merge({
-    startAfterInit: true
-  }, (options || {}));
-
-  // Environment configuration
-  process.env.NODE_ENV = process.env.NODE_ENV || 'development';
-  process.env.NODE_CONFIG_DIR = __dirname + '/config';
-  process.env.NODE_CONFIG_DIR = path.join(process.env.NODE_CONFIG_DIR, 'environments');
-
+function GameStack(manifest, config) {
   // Config loading
-  var config = require('config');
-  if (_.isEmpty(config)) {
-    die('Configuration not found in %s', process.env.NODE_CONFIG_DIR);
-  }
+  this.config = _.merge(require('./config/default'), config);
 
   // Building core
-  this.core = new Hyperion(config);
+  this.core = new Hyperion(this.config.hyperion);
 
   // Manifest
   var defaultManifest;
@@ -45,7 +32,7 @@ function GameStack(manifest, options) {
   this.manifest = manifest || defaultManifest;
 
   // Automatic start
-  if (this.config.startAfterInit) {
+  if (this.config.stack.startAfterInit) {
     this.start();
   }
 }
@@ -63,22 +50,34 @@ GameStack.prototype.start = function() {
   Hapi.Pack.compose(gameStack.manifest, function(err, pack) {
     if (err) {
       gameStack.core.logger.error('Failed Composing manifest with error : "%s"', err);
-      deferred.reject(err);
-      return;
+      return deferred.reject(err);
     }
 
     gameStack.pack = pack;
 
-    // Starting pack
-    gameStack.pack.start(function() {
-      gameStack.core.logger.info('GameStack launched in %s env in %s ms'.green, process.env.NODE_ENV, new Date().getTime() - startTime);
-      gameStack.core.logger.info('Available servers :');
+    // Register GameStack plugins
+    async.series(gameStack.config.stack.plugins.map(function(plugin) {
+      return function(next) {
+        gameStack.pack.register(gameStack.core.plugins.create(require(plugin)), next);
+      };
+    }), function(err) {
+      if (err) {
+        gameStack.core.logger.error('GameStack failed launching : %s', err.message);
+        return deferred.reject(err);
+      }
 
-      gameStack.pack.servers.forEach(function(s) {
-        gameStack.core.logger.info('  %s [ %s ]', s.info.uri, s.settings.labels.join(' - '));
+      // Starting pack
+      gameStack.pack.start(function() {
+        gameStack.core.logger.info('GameStack launched in %s env in %s ms'.green, process.env.NODE_ENV, new Date().getTime() - startTime);
+        gameStack.core.logger.info('Available servers :');
+
+        gameStack.pack.servers.forEach(function(s) {
+          gameStack.core.logger.info('  %s [ %s ]', s.info.uri, s.settings.labels.join(' - '));
+        });
+
+        // Resolve start promise
+        deferred.resolve();
       });
-
-      deferred.resolve();
     });
   });
 
