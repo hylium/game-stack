@@ -8,7 +8,7 @@ module.exports = {
   },
   servers: [{
     host: 'localhost',
-    port: process.env.PORT || 9001,
+    port: process.env.PORT || 6001,
     description: 'API server',
     options: {
       labels: ['api'],
@@ -22,7 +22,7 @@ module.exports = {
     }
   }, {
     host: 'localhost',
-    port: process.env.PORT || 9002,
+    port: process.env.PORT || 6002,
     description: 'Website server',
     options: {
       labels: ['website'],
@@ -32,7 +32,7 @@ module.exports = {
     }
   }, {
     host: 'localhost',
-    port: process.env.PORT || 9003,
+    port: process.env.PORT || 6003,
     description: 'Game app server',
     options: {
       labels: ['game'],
@@ -42,7 +42,7 @@ module.exports = {
     }
   }, {
     host: 'localhost',
-    port: process.env.PORT || 9004,
+    port: process.env.PORT || 6004,
     description: 'Auth server',
     options: {
       labels: ['auth'],
@@ -53,10 +53,11 @@ module.exports = {
   }],
   plugins: {
     good: {
-      subscribers: {
-        console: [],
-        'log/game-stack.log': ['request']
-      },
+      opsInterval: 1000,
+      reporters: [{
+        reporter: require('good-console'),
+        args:[{ log: '*', request: '*' }]
+      }],
       logRequestPayload: true
     },
     lout: {

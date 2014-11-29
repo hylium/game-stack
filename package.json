@@ -16,21 +16,24 @@
     "config": "^1.8.1",
     "game-stack-hyperion": "git+https://github.com/hylium/game-stack-hyperion.git",
     "good": "^4.0.2",
+    "good-console": "^2.0.1",
     "hapi": "^7.5.2",
     "joi": "^4.9.0",
     "lodash": "^2.4.1",
     "lout": "^5.2.0",
-    "util": "^0.10.3"
+    "q": "^1.1.2"
   },
   "devDependencies": {
     "grunt": "^0.4.5",
     "grunt-contrib-jshint": "^0.10.0",
     "grunt-contrib-watch": "^0.6.1",
     "grunt-env": "^0.4.2",
-    "grunt-mocha": "^0.4.11",
+    "grunt-mocha-test": "^0.12.4",
     "grunt-nodemon": "^0.3.0",
     "jit-grunt": "^0.9.0",
     "jshint-stylish": "^1.0.0",
+    "mocha": "^2.0.1",
+    "should": "^4.3.0",
     "time-grunt": "^1.0.0"
   }
 }
