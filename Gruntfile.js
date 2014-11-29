@@ -1,12 +1,6 @@
 'use strict';
 
 module.exports = function(grunt) {
-  var localConfig;
-  try {
-    localConfig = require('./config/local.env');
-  } catch(e) {
-    localConfig = {};
-  }
 
   // Load grunt tasks automatically, when needed
   require('jit-grunt')(grunt, {
@@ -34,18 +28,24 @@ module.exports = function(grunt) {
     },
 
     env: {
+      dev: {
+        NODE_ENV: 'development'
+      },
       test: {
         NODE_ENV: 'test'
       },
       prod: {
         NODE_ENV: 'production'
-      },
-      all: localConfig
+      }
     },
 
-    mocha: {
+    mochaTest: {
       test: {
-        src: ['test/**/*.spec.js']
+        options: {
+          reporter: 'dot',
+          require: 'should'
+        },
+        src: ['test/**/*.js']
       }
     },
 
@@ -66,4 +66,6 @@ module.exports = function(grunt) {
       }
     }
   });
+
+  grunt.registerTask('test', ['env:test', 'mochaTest']);
 };
