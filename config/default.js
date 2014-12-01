@@ -3,7 +3,7 @@
 module.exports = {
   stack: {
     startAfterInit: true,
-    plugins: ['game-stack-prometheus']
+    plugins: []
   },
   hyperion: {
     log: {
