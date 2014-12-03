@@ -15,6 +15,7 @@
   "dependencies": {
     "config": "^1.8.1",
     "game-stack-hyperion": "git+https://github.com/hylium/game-stack-hyperion.git",
+    "game-stack-object": "git+https://github.com/hylium/game-stack-object.git",
     "good": "^4.0.2",
     "good-console": "^2.0.1",
     "hapi": "^7.5.2",
