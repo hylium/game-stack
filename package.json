@@ -13,8 +13,8 @@
   "author": "Benjamin Delamarre (d34thwings@gmail.com)",
   "license": "MIT",
   "dependencies": {
+    "async": "^0.9.0",
     "config": "^1.8.1",
-    "game-stack-hyperion": "git+https://github.com/hylium/game-stack-hyperion.git",
     "game-stack-object": "git+https://github.com/hylium/game-stack-object.git",
     "good": "^4.0.2",
     "good-console": "^2.0.1",
@@ -22,7 +22,8 @@
     "joi": "^4.9.0",
     "lodash": "^2.4.1",
     "lout": "^5.2.0",
-    "q": "^1.1.2"
+    "q": "^1.1.2",
+    "winston": "^0.9.0"
   },
   "devDependencies": {
     "grunt": "^0.4.5",
