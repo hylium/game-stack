@@ -3,6 +3,11 @@
 var Path = require('path'), _ = require('lodash'), fs = require('fs'), exec = require('child_process').execSync;
 
 module.exports = function(pathToPackageJSON) {
+  /**
+   * Clone a GameStack dependency
+   * @param {String} depName
+   * @param {String} depTarget
+   */
   function clonedep(depName, depTarget) {
     var isGit = false;
 
@@ -22,7 +27,7 @@ module.exports = function(pathToPackageJSON) {
     }
 
     try {
-      stat = fs.statSync(Path.join(pathToPackageJSON, 'node_modules/' + depName));
+      fs.statSync(Path.join(pathToPackageJSON, 'node_modules/' + depName));
       console.error(depName, 'is already installed probably via npm, please the folder first');
       return;
     } catch(e){}
@@ -43,5 +48,5 @@ module.exports = function(pathToPackageJSON) {
     } else {
       clonedep(depName, deps[depName]);
     }
-  }
-}
+  };
+};
